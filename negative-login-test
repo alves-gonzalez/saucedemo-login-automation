@@ -1,0 +1,30 @@
+import users from '../fixtures/users.json';
+import '@testing-library/cypress/add-commands';
+
+describe('SauceDemo Login - Negative Test', () => {
+
+  beforeEach(() => {
+    cy.visit('https://www.saucedemo.com/');
+  });
+
+  it('TC002 - Log in with invalid credentials', () => {
+    // Step 1: Enter invalid username
+    cy.findByPlaceholderText('Username')
+      .should('be.visible')
+      .type(users.invalidUser.username);
+
+    // Step 2: Enter invalid password
+    cy.findByPlaceholderText('Password')
+      .should('be.visible')
+      .type(users.invalidUser.password);
+
+    // Step 3: Click login button
+    cy.get('[data-test="login-button"]').click();
+
+    // Step 4: Assert error message appears
+    cy.findByText('Epic sadface: Sorry, this user has been locked out.')
+      .should('be.visible');
+
+    cy.log('Invalid login error message verified');
+  });
+});
