@@ -1,0 +1,39 @@
+import user from '../fixtures/users.json';
+import '@testing-library/cypress/add-commands';
+
+describe('Saucedemo Login - Positive Test', () => {
+
+  beforeEach(() => {
+    cy.visit('https://www.saucedemo.com/');
+  });
+
+  it('TC001 - Login in with valid credentials', () => {
+    // Step 1: Enter valid username
+    cy.findByPlaceholderText('Username').should('be.visible').type(user.validUser.username);
+
+    // Step 2: Enter valid password
+    cy.findByPlaceholderText('Password').should('be.visible').type(user.validUser.password);
+
+    // Step 3: Click log in button
+    cy.get('[data-test="login-button"]').click();
+
+    // Step 4: Verify redirection to inventory page
+    cy.url({ timeout: 6000 }).should('include', 'inventory.html');
+
+    // Step 5: Assert 'Products' title is visible
+    cy.contains('Products').should('be.visible');
+    cy.log('Login Successful');
+
+    // Step 6: Access hamburger navigation bar
+    cy.get('#react-burger-menu-btn').should('be.visible').click();
+
+    // Step 7: Locate and click 'Logout'
+    cy.get('[data-test="logout-sidebar-link"]').should('be.visible').click();
+
+    // Step 8: Verify successful logout
+    cy.url().should('include', 'saucedemo.com');
+    cy.get('[data-test="login-button"]').should('be.visible');
+
+    cy.log('Logout Successful');
+  });
+});
