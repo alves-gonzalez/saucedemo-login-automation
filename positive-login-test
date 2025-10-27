@@ -1,0 +1,26 @@
+import user from '../fixtures/users.json'
+
+describe('Suacedemo Login - Positive Test', () => {
+
+  beforeEach(() => {
+    cy.visit('https://www.saucedemo.com/')
+  });
+
+  it('TC001 - Login in with valid credentials', () => {
+    // Step 1: Enter valid email
+    cy.findByPlaceholderText('Username').should('be.visible').type(user.validUser.username);
+
+    // Step 2: Enter valid password
+    cy.findByPlaceholderText('Password').should('be.visible').type(user.validUser.password);
+
+    // Step 3: Click log in button
+    cy.get('[data-test="login-button"]').click();
+
+    //Step 4: Verify that page is redirected to inventory page
+    cy.url({ timeout: 1000 }).should('include', 'inventory.html');
+
+    // Step 5: Assert 'Product' title is visible
+    cy.contains('Products').should('be.visible');
+    cy.log('Login Successful');
+  });
+});
